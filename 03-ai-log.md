@@ -2,6 +2,11 @@
 
 # AI Log & Reflection
 
+**Họ và tên:** Nguyễn Bá Khánh Huy
+
+**MSSV:** 2A202601591
+
+**Nhóm:** T081
 **Họ và tên:** Đinh Xuân Huy
 
 **MSSV:** 1894
@@ -10,6 +15,9 @@
 
 ## AI giúp gì?
 
+Trong buổi lab này, tôi đã sử dụng mô hình LLM như một **thought-partner** để phân tích và đánh giá các điểm nghẽn (bottleneck) trong vận hành của Vin Smart Future. Ban đầu, tôi yêu cầu AI đề xuất các bài toán có thể áp dụng dữ liệu lớn và AI tạo sinh. AI đã gợi ý rất chi tiết các case study thuộc hệ sinh thái Vingroup (từ Computer Vision cho VinFast đến RecSys cho Xanh SM). 
+
+Sau khi cân nhắc, tôi quyết định chọn đào sâu vào bài toán **Hệ thống Multi-Agent RAG hỗ trợ tra cứu pháp lý và giải quyết khiếu nại tại Vinhomes**. AI đã hỗ trợ tôi rà soát các bước trong Current Workflow (quy trình thủ công hiện tại của ban quản lý) và định hình Future-State Flow. Đặc biệt, trong khâu lập trình Prompt Prototype, AI đã gợi ý cấu trúc System Prompt để giới hạn hành vi của mô hình và cung cấp các kịch bản kiểm thử (adversarial test cases) khá hóc búa để thử thách các ranh giới an toàn.
 Trong buổi lab này, tôi sử dụng ChatGPT như một **thought-partner** để hỗ trợ brainstorming và hoàn thiện ý tưởng. Ban đầu nhóm chưa thống nhất nên chọn bài toán nào trong hệ sinh thái Vin Smart Future. AI đã gợi ý nhiều bài toán thuộc VinFast, Vinmec, Vinhomes và Xanh SM, đồng thời phân tích ưu nhược điểm của từng bài theo tiêu chí AI Fit, Business Impact và khả năng xây dựng prototype.
 
 Sau khi thảo luận, nhóm lựa chọn bài toán **AI hỗ trợ tóm tắt bệnh án tại Vinmec**. AI tiếp tục hỗ trợ xây dựng Current Workflow, Future Workflow, Problem Statement, Success Metric, Human-in-the-loop và Operational Boundary. Ngoài ra, AI còn hỗ trợ viết System Prompt, thiết kế JSON Output và đề xuất các adversarial test cases để kiểm thử prompt prototype.
