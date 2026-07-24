@@ -7,6 +7,9 @@
 **MSSV:** 2A202601591
 
 **Nhóm:** T081
+**Họ và tên:** Đinh Xuân Huy
+
+**MSSV:** 1894
 
 ---
 
@@ -15,30 +18,39 @@
 Trong buổi lab này, tôi đã sử dụng mô hình LLM như một **thought-partner** để phân tích và đánh giá các điểm nghẽn (bottleneck) trong vận hành của Vin Smart Future. Ban đầu, tôi yêu cầu AI đề xuất các bài toán có thể áp dụng dữ liệu lớn và AI tạo sinh. AI đã gợi ý rất chi tiết các case study thuộc hệ sinh thái Vingroup (từ Computer Vision cho VinFast đến RecSys cho Xanh SM). 
 
 Sau khi cân nhắc, tôi quyết định chọn đào sâu vào bài toán **Hệ thống Multi-Agent RAG hỗ trợ tra cứu pháp lý và giải quyết khiếu nại tại Vinhomes**. AI đã hỗ trợ tôi rà soát các bước trong Current Workflow (quy trình thủ công hiện tại của ban quản lý) và định hình Future-State Flow. Đặc biệt, trong khâu lập trình Prompt Prototype, AI đã gợi ý cấu trúc System Prompt để giới hạn hành vi của mô hình và cung cấp các kịch bản kiểm thử (adversarial test cases) khá hóc búa để thử thách các ranh giới an toàn.
+Trong buổi lab này, tôi sử dụng ChatGPT như một **thought-partner** để hỗ trợ brainstorming và hoàn thiện ý tưởng. Ban đầu nhóm chưa thống nhất nên chọn bài toán nào trong hệ sinh thái Vin Smart Future. AI đã gợi ý nhiều bài toán thuộc VinFast, Vinmec, Vinhomes và Xanh SM, đồng thời phân tích ưu nhược điểm của từng bài theo tiêu chí AI Fit, Business Impact và khả năng xây dựng prototype.
+
+Sau khi thảo luận, nhóm lựa chọn bài toán **AI hỗ trợ tóm tắt bệnh án tại Vinmec**. AI tiếp tục hỗ trợ xây dựng Current Workflow, Future Workflow, Problem Statement, Success Metric, Human-in-the-loop và Operational Boundary. Ngoài ra, AI còn hỗ trợ viết System Prompt, thiết kế JSON Output và đề xuất các adversarial test cases để kiểm thử prompt prototype.
 
 ---
 
 ## AI sai gì?
 
-Trong quá trình thiết kế giải pháp cho bài toán pháp lý của Vinhomes, AI ban đầu đề xuất một luồng tự động hóa hoàn toàn: hệ thống đọc ticket khiếu nại, tổng hợp thông tin, ra quyết định và **gửi thẳng email phản hồi** cho cư dân. Đây là một rủi ro cực kỳ lớn vì văn bản pháp lý đòi hỏi độ chính xác tuyệt đối; nếu LLM bị ảo giác (hallucination) hoặc trích dẫn sai điều khoản hợp đồng, công ty sẽ đối mặt với rủi ro pháp lý nghiêm trọng.
+Ban đầu AI đề xuất để mô hình đưa ra chẩn đoán hoặc gợi ý hướng điều trị sau khi đọc bệnh án. Sau khi xem xét, nhóm nhận thấy đây là phạm vi quá rộng và không phù hợp với vai trò của một hệ thống hỗ trợ. Nếu AI đưa ra chẩn đoán hoặc kê đơn thì rủi ro rất cao và không đáp ứng yêu cầu an toàn của bài toán.
 
-Bên cạnh đó, AI đề xuất chỉ dùng một mô hình LLM cơ bản (Single-prompt) để đọc toàn bộ tài liệu. Tôi nhận thấy điều này không khả thi vì khối lượng hợp đồng và nội quy là quá lớn, dẫn đến tràn context window và dễ râu ông nọ cắm cằm bà kia (nhầm lẫn giữa hợp đồng của căn hộ A với nội quy chung).
+Ngoài ra, AI cũng từng đề xuất sử dụng Agent cho bài toán này. Tuy nhiên, sau khi phân tích workflow, nhóm nhận thấy hệ thống chỉ cần thực hiện một tác vụ tóm tắt văn bản nên sử dụng **LLM Feature** sẽ đơn giản, phù hợp và tiết kiệm chi phí hơn.
 
 ---
 
 ## Tôi đã sửa như thế nào?
 
-Để khắc phục những lỗ hổng trên, tôi đã tinh chỉnh lại cấu trúc kiến trúc và ranh giới vận hành (Operational Boundary) như sau:
+Nhóm đã điều chỉnh phạm vi hoạt động của AI bằng cách bổ sung **Operational Boundary** rõ ràng trong System Prompt.
 
-**1. Thay đổi Kiến trúc kỹ thuật:**
-Tôi từ chối phương pháp LLM thông thường và chuyển sang thiết kế **Multi-Agent RAG**. Hệ thống chia làm nhiều tác tử nhỏ: một tác tử chuyên trích xuất hợp đồng riêng của căn hộ, một tác tử tra cứu nội quy chung, và một tác tử tổng hợp câu trả lời. Điều này giúp kiểm soát luồng thông tin chặt chẽ hơn.
+AI chỉ được phép:
 
-**2. Thiết lập Ranh giới vận hành (Operational Boundary):**
-Tôi đã viết lại System Prompt bắt buộc hệ thống phải tuân thủ:
-* **Chỉ được tạo bản nháp (Draft):** Mọi đầu ra phải gắn tag `[DRAFT_ONLY]` và tuyệt đối không được tự động gửi cho cư dân.
-* **Bắt buộc trích dẫn:** AI phải trích dẫn chính xác số trang, số điều khoản từ cơ sở dữ liệu. Nếu không tìm thấy, AI phải kích hoạt Fallback: *"Không tìm thấy quy định rõ ràng, yêu cầu chuyên viên pháp chế rà soát thủ công"*.
+* Tóm tắt bệnh án.
+* Trích xuất tiền sử bệnh.
+* Liệt kê thuốc đang sử dụng.
+* Tóm tắt kết quả xét nghiệm.
+* Đánh dấu thông tin còn thiếu.
 
-**3. Áp dụng Human-in-the-loop (HITL):**
-Ban quản lý và chuyên viên pháp chế bắt buộc phải là người đọc lại bản nháp, đối chiếu trích dẫn và nhấn nút phê duyệt cuối cùng. 
+AI tuyệt đối **không được**:
 
-Quá trình này giúp tôi củng cố tư duy của một AI Product Engineer: Không phải cứ phó mặc mọi thứ cho AI là tốt, mà giá trị thực sự nằm ở việc chúng ta thiết kế được các **guardrails (ranh giới an toàn)** để AI hoạt động ổn định và kiểm soát được rủi ro trong môi trường doanh nghiệp thực tế.
+* Chẩn đoán bệnh.
+* Kê đơn thuốc.
+* Đề xuất phác đồ điều trị.
+* Tự thay thế quyết định của bác sĩ.
+
+Bên cạnh đó, nhóm bổ sung **Human-in-the-loop**, yêu cầu bác sĩ luôn xem lại bản tóm tắt trước khi sử dụng, đồng thời thiết kế **Fallback** để hệ thống quay về quy trình đọc hồ sơ thủ công nếu AI không đủ tự tin hoặc dữ liệu đầu vào không đầy đủ.
+
+Thông qua quá trình này, tôi nhận thấy AI là một công cụ hỗ trợ rất tốt trong việc brainstorming và xây dựng ý tưởng, nhưng con người vẫn cần đánh giá tính khả thi, xác định ranh giới vận hành và kiểm soát rủi ro trước khi đưa giải pháp vào thực tế.
